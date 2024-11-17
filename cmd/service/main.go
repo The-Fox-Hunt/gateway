@@ -1,12 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
+
 	"github.com/The-Fox-Hunt/gateway/internal/api"
 )
 
 func main() {
+
 	handler := api.NewHandler()
-	res := handler.Handle("a", "b")
-	fmt.Println(res)
+
+	// Привязываем маршрут "/" к функции handleRoot
+	http.HandleFunc("/", handler.HandleRoot)
+
+	// Запускаем сервер
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(err)
+	}
 }
