@@ -31,7 +31,7 @@ func (h *Handler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		// Устанавливаем статус ответа 200 OK
 		w.WriteHeader(http.StatusCreated)
-		// Отправляем тело ответа
+		// Отправляем тело ответ
 		fmt.Fprintln(w, "Hello, world!")
 	} else {
 		// Если метод не GET, возвращаем 405 Method Not Allowed
