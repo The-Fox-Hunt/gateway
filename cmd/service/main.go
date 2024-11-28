@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/The-Fox-Hunt/gateway/internal/clients/auth"
+	"github.com/The-Fox-Hunt/gateway/internal/service"
 	"net/http"
 
 	"github.com/The-Fox-Hunt/gateway/internal/api"
@@ -11,7 +12,9 @@ func main() {
 
 	authClient := auth.NewClient()
 
-	handler := api.NewHandler(authClient)
+	authService := service.NewService(authClient)
+
+	handler := api.NewHandler(authService)
 
 	// Привязываем маршрут "/" к функции handleRoot
 	http.HandleFunc("/signup", handler.HandleSignUp)

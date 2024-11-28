@@ -1,5 +1,7 @@
 github.com/The-Fox-Hunt/auth v0.0.0-20241119120135-5295db26a6fa h1:vGeLJaSLnvZY+bFuwFYtTGEvr8nSYY5sUGerZncjxGM=
 github.com/The-Fox-Hunt/auth v0.0.0-20241119120135-5295db26a6fa/go.mod h1:NOluG9ehmZFb2fTjOOWHO66SACRtx5sAW9dbmclO69k=
+github.com/The-Fox-Hunt/auth v0.0.1 h1:LjaSycpj9k5ZqyUbgz+q11GjqpQpQqdVOJMn+duzWjo=
+github.com/The-Fox-Hunt/auth v0.0.1/go.mod h1:NOluG9ehmZFb2fTjOOWHO66SACRtx5sAW9dbmclO69k=
 github.com/golang/protobuf v1.5.4 h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=
 github.com/golang/protobuf v1.5.4/go.mod h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=

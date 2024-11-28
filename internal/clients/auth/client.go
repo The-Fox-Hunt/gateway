@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
+	"github.com/The-Fox-Hunt/gateway/internal/model"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -22,14 +23,17 @@ func NewClient() *Client {
 	return &Client{client: client}
 }
 
-func (c *Client) DoSignUp(ctx context.Context) error {
-	resp, err := c.client.Login(ctx, &auth.LoginIn{
-		Username: "Hello ",
-		Password: "World",
+func (c *Client) DoSignUp(ctx context.Context, data model.SignupData) (model.SignupSuccess, error) {
+	resp, err := c.client.Signup(ctx, &auth.SignupIn{
+		Username: data.Username,
+		Password: data.Password,
 	})
 	if err != nil {
-		return fmt.Errorf("failed to login: %w", err)
+		return model.SignupSuccess{}, fmt.Errorf("failed to login: %w", err)
 	}
-	log.Printf("login succeeded: %s", resp.Token)
-	return nil
+
+	log.Printf("login succeeded: %s", resp.Success)
+	return model.SignupSuccess{
+		Success: resp.Success,
+	}, nil
 }
