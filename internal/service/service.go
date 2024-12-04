@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+
 	"github.com/The-Fox-Hunt/gateway/internal/model"
 )
 
@@ -25,4 +26,14 @@ func (s *Service) SignUp(ctx context.Context, data model.SignupData) (model.Sign
 		return model.SignupSuccess{}, fmt.Errorf("failed to make requst for signup: %w", err)
 	}
 	return res, nil
+}
+
+func (s *Service) SignIn(ctx context.Context, data model.SignInData) (model.SignInSucess, error) {
+
+	res, err := s.authC.DoSignIn(ctx, data)
+	if err != nil {
+		return model.SignInSucess{}, fmt.Errorf("failed to make requst for signup: %w", err)
+	}
+	return res, nil
+
 }

@@ -1,9 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/The-Fox-Hunt/gateway/internal/clients/auth"
 	"github.com/The-Fox-Hunt/gateway/internal/service"
-	"net/http"
 
 	"github.com/The-Fox-Hunt/gateway/internal/api"
 )
@@ -18,6 +19,7 @@ func main() {
 
 	// Привязываем маршрут "/" к функции handleRoot
 	http.HandleFunc("/signup", handler.HandleSignUp)
+	http.HandleFunc("/login", handler.HandleSingIn)
 
 	// Запускаем сервер
 	err := http.ListenAndServe(":8080", nil)
