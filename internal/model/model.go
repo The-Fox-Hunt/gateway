@@ -9,3 +9,13 @@ type SignupData struct {
 type SignupSuccess struct {
 	Success bool `json:"success"`
 }
+
+type SignInData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type SignInSucess struct {
+	Success bool   `json:"success"`
+	Token   string `json:"token"`
+}

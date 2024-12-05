@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/The-Fox-Hunt/gateway/internal/model"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/The-Fox-Hunt/gateway/internal/model"
 )
 
 type Handler struct {
@@ -16,7 +17,7 @@ func NewHandler(authS AuthService) *Handler {
 	return &Handler{aS: authS}
 }
 
-func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data interface{}, action func() (interface{}, error)) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -29,7 +30,6 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data model.SignupData
 	err = json.Unmarshal(jsn, &data)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -37,7 +37,7 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.aS.SignUp(r.Context(), data)
+	resp, err := action()
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -45,7 +45,25 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsnResp, err := json.Marshal(resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(jsnResp)
+}
+
+func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
+	var data model.SignupData
+	h.HandleRequest(w, r, &data, func() (interface{}, error) {
+		return h.aS.SignUp(r.Context(), data)
+	})
+}
+
+func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
+	var data model.SignInData
+	h.HandleRequest(w, r, &data, func() (interface{}, error) {
+		return h.aS.SignIn(r.Context(), data)
+	})
 }
