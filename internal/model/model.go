@@ -1,7 +1,11 @@
 package model
 
-type RequestData struct {
-	Field1 string `json:"field1"`
-	Field2 string `json:"field2"`
-	Result string `json:"result"`
+type SignupData struct {
+	Username        string `json:"username"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirm_password"`
+}
+
+type SignupSuccess struct {
+	Success bool `json:"success"`
 }
