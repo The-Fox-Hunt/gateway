@@ -19,7 +19,7 @@ func main() {
 
 	// Привязываем маршрут "/" к функции handleRoot
 	http.HandleFunc("/signup", handler.HandleSignUp)
-	http.HandleFunc("/login", handler.HandleSingIn)
+	http.HandleFunc("/login", handler.HandleSignIn)
 
 	// Запускаем сервер
 	err := http.ListenAndServe(":8080", nil)

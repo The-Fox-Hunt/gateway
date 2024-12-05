@@ -17,7 +17,7 @@ func NewHandler(authS AuthService) *Handler {
 	return &Handler{aS: authS}
 }
 
-func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data interface{}, action func() (interface{}, error)) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -30,7 +30,6 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data model.SignupData
 	err = json.Unmarshal(jsn, &data)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -38,7 +37,7 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.aS.SignUp(r.Context(), data)
+	resp, err := action()
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -46,41 +45,25 @@ func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsnResp, err := json.Marshal(resp)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(jsnResp)
 }
 
-func (h *Handler) HandleSingIn(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
+	var data model.SignupData
+	h.HandleRequest(w, r, &data, func() (interface{}, error) {
+		return h.aS.SignUp(r.Context(), data)
+	})
+}
 
-	jsn, err := io.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
+func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	var data model.SignInData
-	err = json.Unmarshal(jsn, &data)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	resp, err := h.aS.SignIn(r.Context(), data)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	jsnResp, err := json.Marshal(resp)
-
-	w.WriteHeader(http.StatusCreated)
-	w.Write(jsnResp)
+	h.HandleRequest(w, r, &data, func() (interface{}, error) {
+		return h.aS.SignIn(r.Context(), data)
+	})
 }

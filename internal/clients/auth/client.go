@@ -33,7 +33,7 @@ func (c *Client) DoSignUp(ctx context.Context, data model.SignupData) (model.Sig
 		return model.SignupSuccess{}, fmt.Errorf("failed to login: %w", err)
 	}
 
-	log.Printf("login succeeded: %s", resp.Success)
+	log.Printf("login succeeded: %t", resp.Success)
 	return model.SignupSuccess{
 		Success: resp.Success,
 	}, nil
