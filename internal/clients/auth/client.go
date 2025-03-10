@@ -39,16 +39,30 @@ func (c *Client) DoSignUp(ctx context.Context, data model.SignupData) (model.Sig
 	}, nil
 }
 
-func (c *Client) DoSignIn(ctx context.Context, data model.SignInData) (model.SignInSucess, error) {
+func (c *Client) DoSignIn(ctx context.Context, data model.SignInData) (model.SignInSuccess, error) {
 	resp, err := c.client.Login(ctx, &auth.LoginIn{
 		Username: data.Username,
 		Password: data.Password,
 	})
 	if err != nil {
-		return model.SignInSucess{}, fmt.Errorf("failed to login: %w", err)
+		return model.SignInSuccess{}, fmt.Errorf("failed to login: %w", err)
 	}
 
-	return model.SignInSucess{
+	return model.SignInSuccess{
 		Token: resp.Token,
 	}, nil
+}
+
+func (c *Client) DoChangePassword(ctx context.Context, data model.ChangePasswordData) (model.ChangePasswordSuccess, error) {
+
+	// Отправляем запрос в сервис `auth`
+	resp, err := c.client.ChangePassword(ctx, &auth.UpdatePasswordIn{
+		NewPassword: data.NewPassword,
+	})
+
+	if err != nil {
+		return model.ChangePasswordSuccess{}, fmt.Errorf("failed to change password: %w", err)
+	}
+
+	return model.ChangePasswordSuccess{Success: resp.Success}, nil
 }

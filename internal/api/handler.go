@@ -67,3 +67,12 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 		return h.aS.SignIn(r.Context(), data)
 	})
 }
+
+func (h *Handler) HandleChangePassword(w http.ResponseWriter, r *http.Request){
+	var data model.ChangePasswordData
+
+	h.HandleRequest(w, r, &data, func() (interface{}, error) {
+		return h.aS.ChangePassword(r.Context(), data)
+	})
+
+}

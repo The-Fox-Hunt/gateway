@@ -15,7 +15,22 @@ type SignInData struct {
 	Password string `json:"password"`
 }
 
-type SignInSucess struct {
+type SignInSuccess struct {
 	Success bool   `json:"success"`
 	Token   string `json:"token"`
 }
+
+type ChangePasswordData struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}
+
+type ChangePasswordSuccess struct {
+	Success bool `json:"success"`
+}
+
+type Key string
+
+const (
+	Username Key = "username"
+)
