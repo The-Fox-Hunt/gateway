@@ -3,7 +3,7 @@ module github.com/The-Fox-Hunt/gateway
 go 1.23.3
 
 require (
-	github.com/The-Fox-Hunt/auth v0.0.1
+	github.com/The-Fox-Hunt/auth v0.0.2
 	google.golang.org/grpc v1.71.0
 )
 

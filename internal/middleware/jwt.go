@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+
+	"github.com/The-Fox-Hunt/gateway/config"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -12,12 +13,12 @@ import (
 var jwtSecret []byte
 
 func init() {
-	secret, err := os.ReadFile("/run/secrets/jwt_secret")
+	jwtSecret, err := config.GetSecret("JWT_SECRET")
 	if err != nil {
-		log.Fatalf("Ошибка чтения JWT Secret: %v", err)
+		log.Fatalf("Ошибка загрузки JWT: %v", err)
 	}
-	jwtSecret = secret
-	fmt.Println("JWT Secret загружен успешно") // Только для теста
+
+	fmt.Println("JWT загружен:", jwtSecret)
 }
 
 func JWTAuthInterceptor(next http.Handler) http.Handler {

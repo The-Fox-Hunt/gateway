@@ -56,7 +56,7 @@ func (c *Client) DoSignIn(ctx context.Context, data model.SignInData) (model.Sig
 func (c *Client) DoChangePassword(ctx context.Context, data model.ChangePasswordData) (model.ChangePasswordSuccess, error) {
 
 	// Отправляем запрос в сервис `auth`
-	resp, err := c.client.ChangePassword(ctx, &auth.UpdatePasswordIn{
+	resp, err := c.client.ChangePassword(ctx, &auth.ChangePasswordIn{
 		NewPassword: data.NewPassword,
 	})
 
