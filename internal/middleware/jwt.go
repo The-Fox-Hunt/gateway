@@ -1,11 +1,14 @@
 package middleware
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/The-Fox-Hunt/gateway/config"
+	"github.com/The-Fox-Hunt/gateway/internal/model"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -24,18 +27,17 @@ func init() {
 func JWTAuthInterceptor(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		switch r.URL.Path {
-		case "/Singup", "/Login":
-			next.ServeHTTP(w, r)
-			return
-		}
-
 		token := r.Header.Get("Authorization")
 		if token == "" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			log.Println("there are no strings in the authorization header")
 			return
 		}
+
+		log.Printf("Received raw token: '%s'", token)
+
+		token = strings.TrimPrefix(token, "Bearer ")
+		token = strings.TrimSpace(token)
 
 		parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -55,6 +57,26 @@ func JWTAuthInterceptor(next http.Handler) http.Handler {
 			http.Error(w, "Unauthorized: missing token", http.StatusUnauthorized)
 		}
 
-		next.ServeHTTP(w, r)
+		claims, ok := parsedToken.Claims.(jwt.MapClaims)
+		if !ok {
+			log.Println("Failed to extract claims from token")
+			http.Error(w, "Unauthorized: invalid token claims", http.StatusUnauthorized)
+			return
+		}
+
+		username, ok := claims["username"].(string)
+		if !ok || username == "" {
+			log.Println("Username not found in token claims")
+			http.Error(w, "Unauthorized: username missing", http.StatusUnauthorized)
+			return
+		}
+
+		log.Printf("Get username from token: '%s'", username)
+
+		//  Добавляем `username` в `context`
+		ctx := context.WithValue(r.Context(), model.Username, username)
+		log.Printf("Authenticated user: %s", username)
+
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

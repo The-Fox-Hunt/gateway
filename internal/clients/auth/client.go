@@ -16,7 +16,7 @@ type Client struct {
 }
 
 func NewClient() *Client {
-	conn, err := grpc.NewClient("localhost:8088", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("auth:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,9 +55,16 @@ func (c *Client) DoSignIn(ctx context.Context, data model.SignInData) (model.Sig
 
 func (c *Client) DoChangePassword(ctx context.Context, data model.ChangePasswordData) (model.ChangePasswordSuccess, error) {
 
+	username, ok := ctx.Value(model.Username).(string)
+	if !ok || username == "" {
+		return model.ChangePasswordSuccess{}, fmt.Errorf("username not found in context")
+	}
+
 	// Отправляем запрос в сервис `auth`
 	resp, err := c.client.ChangePassword(ctx, &auth.ChangePasswordIn{
+		OldPassword: data.OldPassword,
 		NewPassword: data.NewPassword,
+		Username: username,
 	})
 
 	if err != nil {

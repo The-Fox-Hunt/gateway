@@ -37,6 +37,8 @@ func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data int
 		return
 	}
 
+	log.Printf("Received data: %+v\n", data)
+
 	resp, err := action()
 	if err != nil {
 		log.Println(err)
@@ -68,7 +70,7 @@ func (h *Handler) HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h *Handler) HandleChangePassword(w http.ResponseWriter, r *http.Request){
+func (h *Handler) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
 	var data model.ChangePasswordData
 
 	h.HandleRequest(w, r, &data, func() (interface{}, error) {
