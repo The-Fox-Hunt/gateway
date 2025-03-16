@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-
 	authClient := auth.NewClient()
 
 	authService := service.NewService(authClient)

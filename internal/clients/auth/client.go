@@ -54,7 +54,6 @@ func (c *Client) DoSignIn(ctx context.Context, data model.SignInData) (model.Sig
 }
 
 func (c *Client) DoChangePassword(ctx context.Context, data model.ChangePasswordData) (model.ChangePasswordSuccess, error) {
-
 	username, ok := ctx.Value(model.Username).(string)
 	if !ok || username == "" {
 		return model.ChangePasswordSuccess{}, fmt.Errorf("username not found in context")

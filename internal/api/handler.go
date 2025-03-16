@@ -26,14 +26,20 @@ func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data int
 	jsn, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+
+		if _, err = w.Write([]byte(err.Error())); err != nil {
+			log.Printf("failed to write response: %v", err)
+		}
 		return
 	}
 
 	err = json.Unmarshal(jsn, &data)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+
+		if _, err = w.Write([]byte(err.Error())); err != nil {
+			log.Printf("failed to write response: %v", err)
+		}
 		return
 	}
 
@@ -41,8 +47,8 @@ func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data int
 
 	resp, err := action()
 	if err != nil {
-		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("failed to write header: %v", err)
 		return
 	}
 
@@ -53,7 +59,9 @@ func (h *Handler) HandleRequest(w http.ResponseWriter, r *http.Request, data int
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write(jsnResp)
+	if _, writeErr := w.Write(jsnResp); writeErr != nil {
+		log.Printf("failed to write response body: %v", writeErr)
+	}
 }
 
 func (h *Handler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
@@ -76,5 +84,4 @@ func (h *Handler) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
 	h.HandleRequest(w, r, &data, func() (interface{}, error) {
 		return h.aS.ChangePassword(r.Context(), data)
 	})
-
 }

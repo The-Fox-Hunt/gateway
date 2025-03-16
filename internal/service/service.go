@@ -30,17 +30,14 @@ func (s *Service) SignUp(ctx context.Context, data model.SignupData) (model.Sign
 }
 
 func (s *Service) SignIn(ctx context.Context, data model.SignInData) (model.SignInSuccess, error) {
-
 	res, err := s.authC.DoSignIn(ctx, data)
 	if err != nil {
 		return model.SignInSuccess{}, fmt.Errorf("failed to make requst for signip: %w", err)
 	}
 	return res, nil
-
 }
 
 func (s *Service) ChangePassword(ctx context.Context, data model.ChangePasswordData) (model.ChangePasswordSuccess, error) {
-
 	ctx = metadata.NewOutgoingContext(ctx, metadata.Pairs("username", ctx.Value(model.Username).(string)))
 	// Отправляем gRPC-запрос в `auth`
 	res, err := s.authC.DoChangePassword(ctx, data)
@@ -49,5 +46,4 @@ func (s *Service) ChangePassword(ctx context.Context, data model.ChangePasswordD
 	}
 
 	return model.ChangePasswordSuccess{Success: res.Success}, nil
-
 }
