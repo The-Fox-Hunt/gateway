@@ -21,10 +21,8 @@ type SignInSuccess struct {
 }
 
 type ChangePasswordData struct {
-	Username string `json:"username"`
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
-	
 }
 
 type ChangePasswordSuccess struct {
