@@ -1,0 +1,24 @@
+version: '3.9'
+
+networks:
+  gateway_net:
+    driver: bridge  
+
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway  
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - gateway_net
+    environment:
+      - AUTH_SERVICE_URL=${AUTH_SERVICE_URL:-http://localhost:8000}  # 🔹 Можно заменить URL, если `auth` не запущен
+    secrets:
+      - jwt_secret  
+
+secrets:
+  jwt_secret:
+    external: true  
