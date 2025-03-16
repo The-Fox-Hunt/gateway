@@ -64,7 +64,6 @@ func (c *Client) DoChangePassword(ctx context.Context, data model.ChangePassword
 	resp, err := c.client.ChangePassword(ctx, &auth.ChangePasswordIn{
 		OldPassword: data.OldPassword,
 		NewPassword: data.NewPassword,
-		Username: username,
 	})
 
 	if err != nil {

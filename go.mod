@@ -3,7 +3,7 @@ module github.com/The-Fox-Hunt/gateway
 go 1.23.3
 
 require (
-	github.com/The-Fox-Hunt/auth v0.0.2
+	github.com/The-Fox-Hunt/auth v0.0.3
 	google.golang.org/grpc v1.71.0
 )
 
@@ -16,4 +16,5 @@ require (
 	google.golang.org/protobuf v1.36.5 // indirect
 )
 
-replace github.com/The-Fox-Hunt/auth => ../auth
+//Почему auth не подтягивается, например, при обновлении прото файла
+//replace github.com/The-Fox-Hunt/auth => ../auth
